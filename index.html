@@ -104,6 +104,10 @@
     /* スマホではジャンルを一列に並べ、左右にスクロールできるようにする */
     @media (max-width: 600px) {
       .nav-filter {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: var(--bg-cream);
         flex-wrap: nowrap;
         justify-content: flex-start;
         overflow-x: auto;
