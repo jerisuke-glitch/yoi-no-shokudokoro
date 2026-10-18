@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>宵の食処 - 周辺ディナーのご案内</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700&amp;family=Zen+Kaku+Gothic+New:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<style>
+    :root {
+      --bg-cream: #F8F6F0;
+      --bg-card: #FFFFFF;
+      --text-main: #262422;
+      --text-sub: #635F59;
+      --text-muted: #948F87;
+      --accent-wood: #8E735B;
+      --accent-light: #EFE9E0;
+      --border-light: #E7E3DC;
+      --shadow-soft: 0 4px 20px rgba(38, 36, 34, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-cream);
+      color: var(--text-main);
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-weight: 400;
+      line-height: 1.8;
+      padding-bottom: 60px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    header {
+      padding: 40px 0 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .header-sub {
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      color: var(--accent-wood);
+      margin-bottom: 8px;
+      font-family: 'Shippori Mincho', serif;
+    }
+
+    .header-title {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .header-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+    }
+
+    .nav-filter {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 24px 0;
+    }
+
+    .filter-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      font-family: 'Zen Kaku Gothic New', sans-serif;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.2s ease;
+      user-select: none;
+      outline: none;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--text-main) !important;
+      color: #FFF !important;
+      border-color: var(--text-main) !important;
+    }
+
+    /* スマホではジャンルを一列に並べ、左右にスクロールできるようにする */
+    @media (max-width: 600px) {
+      .nav-filter {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+        padding: 20px 0 16px;
+      }
+      .nav-filter .filter-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+    }
+
+    .spots-list {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .spot-card {
+      background: var(--bg-card);
+      border-radius: 4px;
+      border: 1px solid var(--border-light);
+      padding: 28px 24px 24px;
+      box-shadow: var(--shadow-soft);
+      display: block;
+    }
+
+    .spot-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .spot-category {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      color: var(--accent-wood);
+      background: var(--accent-light);
+      padding: 2px 10px;
+      border-radius: 2px;
+    }
+
+    .spot-distance {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .spot-name {
+      font-family: 'Shippori Mincho', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .spot-desc {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .spot-meta {
+      border-top: 1px dashed var(--border-light);
+      padding-top: 16px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.82rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: baseline;
+    }
+
+    .meta-label {
+      width: 72px;
+      flex-shrink: 0;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.05em;
+    }
+
+    .meta-val {
+      color: var(--text-main);
+      flex: 1;
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .card-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 10px;
+      border-radius: 3px;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .action-btn.map {
+      background-color: var(--bg-cream);
+      border: 1px solid var(--border-light);
+      color: var(--text-main);
+    }
+
+    .action-btn.map:hover {
+      background-color: var(--text-main);
+      color: #FFF;
+      border-color: var(--text-main);
+    }
+
+    .action-btn.web {
+      background-color: var(--accent-wood);
+      border: 1px solid var(--accent-wood);
+      color: #FFF;
+    }
+
+    .action-btn.web:hover {
+      background-color: #725A45;
+      color: #FFF;
+      border-color: #725A45;
+    }
+
+    .action-btn svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+<header>
+<div class="header-sub">高松南部・周辺のご案内</div>
+<h1 class="header-title">宵の食処</h1>
+<p class="header-note">店舗情報は2026年10月確認時点のものです。営業時間・定休日は変更される場合があります。</p>
+</header>
+<!-- 整理されたジャンル切替ボタン（全7種） -->
+<div class="nav-filter">
+<button class="filter-btn active" data-filter="all" type="button">すべて</button>
+<button class="filter-btn" data-filter="japanese" type="button">和食</button>
+<button class="filter-btn" data-filter="chicken" type="button">鶏料理</button>
+<button class="filter-btn" data-filter="udon" type="button">讃岐うどん</button>
+<button class="filter-btn" data-filter="yakiniku" type="button">焼肉</button>
+<button class="filter-btn" data-filter="western" type="button">洋食</button>
+<button class="filter-btn" data-filter="italian" type="button">イタリアン</button>
+</div>
+<!-- お店一覧 -->
+<div class="spots-list">
+<!-- 1. 食と酒 風のじょうけい -->
+<article class="spot-card" data-category="japanese">
+<div class="spot-top">
+<span class="spot-category">和食・創作</span>
+<span class="spot-distance">車で約13分</span>
+</div>
+<h2 class="spot-name">食と酒 風のじょうけい</h2>
+<p class="spot-desc">
+          季節のうつろいを感じる端正な創作和食と、厳選された日本酒。温もりある落ち着いた空間で、心ほどける旬の味覚をゆっくりとご堪能いただけます。
+        </p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">17:00～24:00（営業時間は事前に店舗へ確認）<br>※事前予約推奨</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">水曜日（第1火曜の休業は未確認）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市川島東町497-18</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=香川県高松市川島東町497-18+風のじょうけい" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://www.instagram.com/kazenojokei/" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            公式SNSを見る
+          </a>
+</div>
+</article>
+
+
+<!-- 2. 本格手打 もり家 高松本店 -->
+<article class="spot-card" data-category="udon">
+<div class="spot-top">
+<span class="spot-category">讃岐うどん</span>
+<span class="spot-distance">車で約6分</span>
+</div>
+<h2 class="spot-name">本格手打 もり家 高松本店</h2>
+<p class="spot-desc">
+          全国に名を馳せる讃岐うどん屈指の名店。圧巻の「かき揚げおろしうどん」をはじめ、しなやかで力強い本物の手打ち麺を味わえます。夕方18時までの営業のため、早めの夕飯におすすめです。
+        </p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">18:00まで営業（10:30開店／売り切れ等による変更に注意）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">木曜・金曜（祝日は営業、臨時休業あり）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市香川町川内原1575-1</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=本格手打もり家+高松本店" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://mori-ya.jp/pages/location" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            公式HPを見る
+          </a>
+</div>
+</article>
+<!-- 3. さぬき麺市場 伏石店 -->
+<article class="spot-card" data-category="udon">
+<div class="spot-top">
+<span class="spot-category">讃岐うどん</span>
+<span class="spot-distance">車で約14分</span>
+</div>
+<h2 class="spot-name">さぬき麺市場 伏石店</h2>
+<p class="spot-desc">セルフ形式で讃岐うどんや天ぷらを楽しめる一軒。夜の営業時間は掲載媒体によって異なるため、遅い時間の利用は店舗へご確認ください。</p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">夜の営業：21:00までとの掲載あり（20:30閉店との掲載もあるため、要確認）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">1月1日・2日（組合掲載情報）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市伏石町2149-16</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=さぬき麺市場+伏石店" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://www.honba-sanukiudon.jp/shoplist/detail.php?i=34" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            店舗情報を見る
+          </a>
+</div>
+</article>
+<!-- 4. オリーブ牛専門 焼肉 一牛家 -->
+<article class="spot-card" data-category="yakiniku">
+<div class="spot-top">
+<span class="spot-category">焼肉</span>
+<span class="spot-distance">車で約13分</span>
+</div>
+<h2 class="spot-name">オリーブ牛専門 焼肉 一牛家（いちごや）</h2>
+<p class="spot-desc">
+          讃岐の誇るブランド和牛「オリーブ牛」を一頭買いで仕入れる炭火焼肉店。落ち着いた和モダンの半個室で、きめ細やかな肉質と上品な脂の甘みを贅沢に堪能できます。
+        </p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">17:00～23:00（料理L.O.22:00）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">火曜（臨時休業あり）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市仏生山町甲1677-1</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=オリーブ牛専門+焼肉+一牛家" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://www.instagram.com/yakiniku_ichigoya/" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            公式SNSを見る
+          </a>
+</div>
+</article>
+<!-- 5. 骨付鳥 一鶴 太田店 -->
+<article class="spot-card" data-category="chicken">
+<div class="spot-top">
+<span class="spot-category">鶏料理・骨付鳥</span>
+<span class="spot-distance">車で約13分</span>
+</div>
+<h2 class="spot-name">骨付鳥 一鶴（太田店）</h2>
+<p class="spot-desc">
+          香川を代表する名物・骨付鳥の老舗。特製スパイスをまとい、高温の窯で皮はパリッと身はふっくらジューシーに焼き上げられます。おにぎりをタレに浸していただくのも格別です。
+        </p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">平日 17:00～22:00／土日祝 夕方も通し営業～22:00（L.O.21:30）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">木曜（祝日の営業は事前確認）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市多肥下町1567-3</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=香川県高松市多肥下町1567-3+一鶴+太田店" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://www.ikkaku.co.jp/ota/info.html" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            公式HPを見る
+          </a>
+</div>
+</article>
+<!-- 6. 焼鳥 てんやわんや -->
+<article class="spot-card" data-category="chicken">
+<div class="spot-top">
+<span class="spot-category">鶏料理・炭火焼鳥</span>
+<span class="spot-distance">車で約11分</span>
+</div>
+<h2 class="spot-name">焼鳥 てんやわんや</h2>
+<p class="spot-desc">
+          仏生山で長く親しまれるこだわりの炭火焼き鳥処。職人が備長炭で香ばしく丁寧に焼き上げる串焼きと、滋味深い鶏料理を肩肘張らずゆったり味わえます。
+        </p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">17:30～23:00（L.O.22:00）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">水曜・第3週火曜（公式店舗案内による。公式内の他ページと差異あり）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市仏生山町甲388-1</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=てんやわんや+仏生山店" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://www.tenya-wanya.com/shop/" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            公式HPを見る
+          </a>
+</div>
+</article>
+<!-- 7. 窯焼きバーグ 五十八 -->
+<article class="spot-card" data-category="western">
+<div class="spot-top">
+<span class="spot-category">洋食・ハンバーグ</span>
+<span class="spot-distance">車で約13分</span>
+</div>
+<h2 class="spot-name">窯焼きバーグ 五十八（仏生山の森）</h2>
+<p class="spot-desc">仏生山の森にある薪窯焼きハンバーグのレストラン。夕食利用は公式施設案内のラストオーダー20:00を目安に、来店前にご確認ください。</p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">ディナー 17:00～20:30（L.O.20:00）※公式ページ間に差異あり、要確認</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">公式施設案内で明記なし・店舗に要確認</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市仏生山町甲884-2</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=香川県高松市仏生山町甲884-2+窯焼きバーグ五十八" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://busshozan-no-mori.com/facility/" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            公式HPを見る
+          </a>
+</div>
+</article>
+<!-- 8. trattoria tanabata -->
+<article class="spot-card" data-category="italian">
+<div class="spot-top">
+<span class="spot-category">イタリアン</span>
+<span class="spot-distance">車で約14分</span>
+</div>
+<h2 class="spot-name">trattoria tanabata（タナバタ）</h2>
+<p class="spot-desc">
+          住宅街に静かに佇む一軒家トラットリア。素材本来の味を活かした滋味あふれる手打ちパスタや前菜が評判で、穏やかなディナータイムを過ごしたい夜にぴったりです。
+        </p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">18:30～21:00（営業・予約条件は事前確認）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">火曜を中心に営業日を要確認（月曜の掲載に差異あり）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市多肥下町1561-3</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=香川県高松市多肥下町1561-3+tanabata" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://www.instagram.com/trattoria_tanabata/" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            公式SNSを見る
+          </a>
+</div>
+</article>
+<!-- 9. ごはんや えん -->
+<article class="spot-card" data-category="japanese">
+<div class="spot-top">
+<span class="spot-category">和食・定食</span>
+<span class="spot-distance">車で約13分</span>
+</div>
+<h2 class="spot-name">ごはんや えん</h2>
+<p class="spot-desc">旬の魚介や地元食材を生かした和食を楽しめるお店。公式サイトには鮭とイクラ、真鯛の土鍋ごはんなども掲載されています。</p>
+<div class="spot-meta">
+<div class="meta-item">
+<span class="meta-label">営業時間</span>
+<span class="meta-val">月・水・木・日 17:00～22:00（料理・飲料L.O.21:30）／金・土 17:00～22:30（料理L.O.21:30、飲料L.O.22:00）</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">定休日</span>
+<span class="meta-val">火曜・12月31日～1月2日</span>
+</div>
+<div class="meta-item">
+<span class="meta-label">所在地</span>
+<span class="meta-val">香川県高松市多肥下町1548-28</span>
+</div>
+</div>
+<div class="card-actions">
+<a class="action-btn map" href="https://www.google.com/maps/dir/?api=1&amp;origin=香川県高松市西植田町3186&amp;destination=香川県高松市多肥下町1548-28+ごはんやえん" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5-2.5 2.5z"></path></svg>
+            経路・地図（車）
+          </a>
+<a class="action-btn web" href="https://www.yamase1980.com/gohanya_en/" rel="noopener noreferrer" target="_blank">
+<svg viewbox="0 0 24 24"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"></path></svg>
+            公式HPを見る
+          </a>
+</div>
+</article>
+</div><p class="header-note" style="padding:24px 0;text-align:center;line-height:1.8;">※ 所要時間は交通状況で変わるため、各「経路・地図（車）」から確認してください。公式サイト内で矛盾する場合は要確認と表示しています。</p>
+</div>
+<script>
+    (function() {
+      function setupFilters() {
+        document.addEventListener('click', function(e) {
+          var btn = e.target.closest('.filter-btn');
+          if (!btn) return;
+
+          var selectedCategory = btn.getAttribute('data-filter');
+          if (!selectedCategory) return;
+
+          // 1. ボタンのアクティブ状態の更新
+          var buttons = document.querySelectorAll('.filter-btn');
+          buttons.forEach(function(b) {
+            b.classList.remove('active');
+          });
+          btn.classList.add('active');
+
+          // 2. カードの表示・非表示の切り替え
+          var cards = document.querySelectorAll('.spot-card');
+          cards.forEach(function(card) {
+            var cardCat = card.getAttribute('data-category');
+            if (selectedCategory === 'all' || cardCat === selectedCategory) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setupFilters);
+      } else {
+        setupFilters();
+      }
+    })();
+  </script>
+</body>
+</html>
