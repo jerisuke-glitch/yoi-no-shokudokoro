@@ -72,6 +72,20 @@
       letter-spacing: 0.06em;
     }
 
+    .header-return-note {
+      display: none;
+      margin-top: 10px;
+      color: var(--text-sub);
+      font-size: 0.76rem;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      .header-return-note {
+        display: block;
+      }
+    }
+
     .nav-filter {
       display: flex;
       flex-wrap: wrap;
@@ -274,6 +288,7 @@
 <div class="header-sub">高松南部・周辺のご案内</div>
 <h1 class="header-title">宵の食処</h1>
 <p class="header-note">店舗情報は2026年10月確認時点のものです。営業時間・定休日は変更される場合があります。</p>
+<p class="header-return-note">※ 地図・公式サイトを開いた後は、元のブラウザに戻ると、このページを続けてご覧いただけます。</p>
 </header>
 <!-- 整理されたジャンル切替ボタン（全7種） -->
 <div class="nav-filter">
